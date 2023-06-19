@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Futurae Adaptive demo</string>
+    <string name="button_enable_adaptive">Enable Adaptive</string>
+    <string name="button_disable_adaptive">Disable Adaptive</string>
+    <string name="button_request_collection">Request Collection</string>
+    <string name="button_view_collections">View Collections</string>
+    <string name="status_formatter">Status: %1$s</string>
+    <string name="status_idle">Idle</string>
+    <string name="status_collecting">Collecting</string>
+    <string name="button_set_time_threshold">Set time threshold</string>
+    <string name="label_set_the_time_threshold">Set the time threshold for re-using adaptive collections</string>
+</resources>

@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven {
+            url "https://artifactory.futurae.com/artifactory/futurae-mobile"
+            credentials {
+                username = "anonymous"
+                password = ""
+            }
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Futurae-adaptive-sdk"
+include ':app'
