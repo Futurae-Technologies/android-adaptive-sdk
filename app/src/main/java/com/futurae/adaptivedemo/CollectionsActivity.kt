@@ -32,11 +32,10 @@ class CollectionsActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            AdaptiveDbHelper.INSTANCE.allCollections.collect {
+            AdaptiveDbHelper.getAllCollections().collect {
                 collectionsAdapter.submitList(it.toList())
             }
         }
-
     }
 }
 

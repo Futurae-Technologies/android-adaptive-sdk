@@ -8,7 +8,7 @@ class AdaptiveApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AdaptiveSDK.INSTANCE.init(this)
+        AdaptiveSDK.init(this)
         Timber.plant(Timber.DebugTree())
     }
 }

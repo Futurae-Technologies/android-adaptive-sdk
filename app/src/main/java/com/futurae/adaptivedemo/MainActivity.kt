@@ -17,6 +17,7 @@ import com.futurae.sdk.adaptive.AdaptiveSDK
 import com.futurae.sdk.adaptive.CompletionCallback
 import com.futurae.sdk.adaptive.UpdateCallback
 import com.futurae.sdk.adaptive.exception.AdaptiveException
+import com.futurae.sdk.adaptive.model.AdaptiveCollection
 import com.google.android.material.slider.Slider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,14 +45,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val completionCallback = CompletionCallback {
-        Toast.makeText(this@MainActivity, "Collection complete", Toast.LENGTH_SHORT).show()
-        lifecycleScope.launch(Dispatchers.IO) {
-            AdaptiveDbHelper.INSTANCE.insertCollection(it)
+    private val completionCallback = object : CompletionCallback {
+
+        override fun onCollectionCompleted(data: AdaptiveCollection) {
+            Toast.makeText(this@MainActivity, "Collection complete", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch(Dispatchers.IO) {
+                AdaptiveDbHelper.insertCollection(data)
+            }
         }
     }
-    private val updateCallback = UpdateCallback {
-        //
+    private val updateCallback = object:  UpdateCallback {
+        override fun onCollectionDataUpdated(data: AdaptiveCollection) {
+            //no-op
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,31 +71,37 @@ class MainActivity : AppCompatActivity() {
 
         binding.statusTextview.text = getString(R.string.status_formatter, getString(R.string.status_idle))
         binding.buttonEnable.text =
-            if (AdaptiveSDK.INSTANCE.isEnabled) getString(R.string.button_disable_adaptive)
+            if (AdaptiveSDK.isEnabled()) getString(R.string.button_disable_adaptive)
             else getString(R.string.button_enable_adaptive)
         binding.buttonEnable.setOnClickListener {
-            if (!AdaptiveSDK.INSTANCE.isEnabled) {
-                AdaptiveSDK.INSTANCE.enable(applicationContext as AdaptiveApp, updateCallback, completionCallback)
+            if (!AdaptiveSDK.isEnabled()) {
+                AdaptiveSDK.enable(applicationContext as AdaptiveApp, updateCallback, completionCallback)
                 binding.buttonEnable.text = getString(R.string.button_disable_adaptive)
             } else {
-                AdaptiveSDK.INSTANCE.disable()
+                AdaptiveSDK.disable()
                 binding.buttonEnable.text = getString(R.string.button_enable_adaptive)
             }
         }
         binding.buttonRequestCollection.setOnClickListener {
             try {
-                AdaptiveSDK.INSTANCE.requestAdaptiveCollection(
-                    UpdateCallback {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            binding.statusTextview.text =
-                                getString(R.string.status_formatter, getString(R.string.status_collecting))
+                AdaptiveSDK.requestAdaptiveCollection(
+                    object : UpdateCallback {
+                        override fun onCollectionDataUpdated(data: AdaptiveCollection) {
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                binding.statusTextview.text =
+                                    getString(R.string.status_formatter, getString(R.string.status_collecting))
+                            }
                         }
+
                     },
-                    CompletionCallback {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            binding.statusTextview.text =
-                                getString(R.string.status_formatter, getString(R.string.status_idle))
+                    object : CompletionCallback {
+                        override fun onCollectionCompleted(data: AdaptiveCollection) {
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                binding.statusTextview.text =
+                                    getString(R.string.status_formatter, getString(R.string.status_idle))
+                            }
                         }
+
                     },
                     true
                 )
@@ -106,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.buttonConfigureThreshold.setOnClickListener {
             try {
-                var sliderValue = AdaptiveSDK.INSTANCE.adaptiveCollectionThreshold
+                var sliderValue = AdaptiveSDK.getAdaptiveCollectionThreshold()
                 val dialogView = layoutInflater.inflate(R.layout.dialog_adaptive_threshold, null)
                 val textValue = dialogView.findViewById<TextView>(R.id.sliderValue).apply {
                     text = "$sliderValue sec"
@@ -122,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                     .setTitle("Adaptive time threshold").setView(dialogView)
                     .setPositiveButton("OK") { _, _ ->
                         try {
-                            AdaptiveSDK.INSTANCE.adaptiveCollectionThreshold = sliderValue
+                            AdaptiveSDK.setAdaptiveCollectionThreshold(sliderValue)
                         } catch (e: AdaptiveException) {
                             Timber.e(e)
                             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()

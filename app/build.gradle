@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace 'com.futurae.adaptivedemo'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.futurae.adaptivedemo"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 1
-        versionName "1.0.1-alpha"
+        versionName "1.0.2-alpha"
     }
 
     buildFeatures {
@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.futurae.sdk:adaptive:1.0.1-alpha'
+    implementation 'com.futurae.sdk:adaptive:1.0.2-alpha'
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.2'
