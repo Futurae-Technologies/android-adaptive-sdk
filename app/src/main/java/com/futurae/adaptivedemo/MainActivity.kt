@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                         textValue.text = "${value.toInt()} sec"
                     }
                 }
-                val dialog = AlertDialog.Builder(this, R.style.Theme_Material3_Light_Dialog)
+                val dialog = AlertDialog.Builder(this, com.google.android.material.R.style.Theme_Material3_Light_Dialog)
                     .setTitle("Adaptive time threshold").setView(dialogView)
                     .setPositiveButton("OK") { _, _ ->
                         try {

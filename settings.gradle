@@ -9,10 +9,11 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         maven {
-            url "https://artifactory.futurae.com/artifactory/futurae-mobile"
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/Futurae-Technologies/android-adaptive-sdk"
             credentials {
-                username = "anonymous"
-                password = ""
+                username = GITHUB_ACTOR
+                password = GITHUB_TOKEN
             }
         }
         google()

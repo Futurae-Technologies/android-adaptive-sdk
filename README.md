@@ -3,15 +3,15 @@
 This is the Futurae adaptive SDK for Android. The Adaptive SDK is a data collection SDK that can be used stand-alone or together with Futurae SDK.
 
 ### Installation
-
-In your application `build.gradle` file add:
+Add the maven repository for Github packages and dependency in your `build.gradle`:
 ```
 repositories {
     maven {
-        url "https://artifactory.futurae.com/artifactory/futurae-mobile"
+        name = "GitHubPackages"
+        url = "https://maven.pkg.github.com/Futurae-Technologies/android-adaptive-sdk"
         credentials {
-            username = "anonymous"
-            password = ""
+            username = GITHUB_ACTOR
+            password = GITHUB_TOKEN
         }
     }
 }
