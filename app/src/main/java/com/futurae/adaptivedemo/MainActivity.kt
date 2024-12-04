@@ -48,6 +48,9 @@ class MainActivity : AppCompatActivity() {
     private val completionCallback = object : CompletionCallback {
 
         override fun onCollectionCompleted(data: AdaptiveCollection) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                binding.statusTextview.text = getString(R.string.status_formatter, getString(R.string.status_idle))
+            }
             Toast.makeText(this@MainActivity, "Collection complete", Toast.LENGTH_SHORT).show()
             lifecycleScope.launch(Dispatchers.IO) {
                 AdaptiveDbHelper.insertCollection(data)
@@ -56,7 +59,10 @@ class MainActivity : AppCompatActivity() {
     }
     private val updateCallback = object:  UpdateCallback {
         override fun onCollectionDataUpdated(data: AdaptiveCollection) {
-            //no-op
+            lifecycleScope.launch(Dispatchers.Main) {
+                binding.statusTextview.text =
+                    getString(R.string.status_formatter, getString(R.string.status_collecting))
+            }
         }
     }
 
